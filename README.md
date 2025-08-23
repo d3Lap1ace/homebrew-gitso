@@ -90,7 +90,7 @@
 </p>
 
 # gitso
-![img.png](img/render_ch.png)
+
 > `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），根据域名作者名并将其按可预测的目录树存放到  
 > `~/Documents/GitHub.com/<owner>/<repo>`。  
 > 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
@@ -110,7 +110,7 @@
       ```
 
 ## 效果图
-
+![img.png](img/render_ch.png)
 
 ## 项目动机
 
