@@ -23,14 +23,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
+	"github.com/spf13/cobra"
 	"gitso-cli/internal/downloader"
 	"log"
 	"os"
-	"path/filepath"
-
-	"github.com/spf13/cobra"
 )
+
+const defaultDest = "~/Documents/Github.com"
 
 var (
 	destBase string
@@ -45,10 +44,7 @@ var rootCmd = &cobra.Command{
 	// Whenever the user enters only the root command
 	Run: func(cmd *cobra.Command, args []string) {
 		if destBase == "" {
-			destBase = viper.GetString("dest")
-		}
-		if branch == "" {
-			branch = viper.GetString("branch")
+			destBase = loadDefaultDest()
 		}
 
 		repoURL := args[0]
@@ -72,35 +68,20 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
 	rootCmd.Flags().StringVarP(&destBase, "dest", "d", "", "destination base directory")
 	rootCmd.Flags().StringVarP(&branch, "branch", "b", "", "branch to clone")
-
-	_ = viper.BindPFlag("dest", rootCmd.Flags().Lookup("dest"))
-	_ = viper.BindPFlag("branch", rootCmd.Flags().Lookup("branch"))
-
-	viper.SetEnvPrefix("gitso")
-	viper.AutomaticEnv()
+	rootCmd.AddCommand(configCmd)
 
 }
 
-func initConfig() {
-	viper.SetConfigName(".gitso")
-	viper.SetConfigType("yaml")
-	// Prefer config in the user's home directory (~/.gitso.yaml); fall back to current directory
-	if home, err := os.UserHomeDir(); err == nil {
-		viper.AddConfigPath(home)
-		// Default dest is ~/Documents/GitHub.com
-		viper.SetDefault("dest", filepath.Join(home, "Documents", "GitHub.com"))
+func loadDefaultDest() string {
+	if env := os.Getenv("GITSO_DEST"); env != "" {
+		return env
 	}
-	viper.AddConfigPath(".")
-
-	// Default branch when not specified anywhere
-	viper.SetDefault("branch", "main")
-
-	_ = viper.ReadInConfig() // ignore error if the file does not exist
+	return defaultDest
 }
