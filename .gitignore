@@ -1,6 +1,7 @@
 # ── 1. Go build artifacts ────────────────
 gitso
 gitso.exe
+.gitso.yaml
 *.test
 coverage.out
 
