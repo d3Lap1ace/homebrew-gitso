@@ -1,0 +1,21 @@
+# ── 1. Go build artifacts ────────────────
+gitso
+gitso.exe
+*.test
+coverage.out
+
+# ── 2. GoReleaser output ─────────────────
+dist/
+*.tar.gz
+*.zip
+checksums.txt
+
+
+# ── 4. IDE / Editor files ────────────────
+.DS_Store
+.idea/
+.vscode/
+*.sw?
+Thumbs.db
+
+
