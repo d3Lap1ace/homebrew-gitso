@@ -29,26 +29,26 @@
     * **amd64**<br>
    Download `gitso_linux_amd64.tar.gz`
       ```bash
-      tar -zxvf gitso_linux_amd64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      gitso --help
+      tar -zxvf gitso_linux_amd64.tar.gz gitso \
+      && sudo chmod +x gitso \
+      && sudo mv gitso/gitso /usr/local/bin \
+      && gitso --help
       ```
     * **arm64**<br>
    Download `gitso_linux_arm64.tar.gz`
       ```bash
-      tar -zxvf gitso_linux_arm64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      gitso --help
+      tar -zxvf gitso_linux_arm64.tar.gz gitso \
+      && sudo chmod +x gitso \
+      && sudo mv gitso/gitso /usr/local/bin \
+      && gitso --help
       ```
 
 2. **macOS** (Apple Silicon & Intel)<br>
    Install via **Homebrew**  
    ```bash
-   brew tap d3Lap1ace/gitso
-   brew install gitso
-   gitso --help
+   brew tap d3Lap1ace/gitso \
+   && brew install gitso \
+   && gitso --help
    ```
 
 3. **Windows**
@@ -75,7 +75,12 @@
 > `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），并将其按可预测的目录树存放到  
 > `~/Documents/GitHub.com/<owner>/<repo>`。  
 > 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
-
+> 
+## Modify default settings
+> Create `~/.gitso.yaml`<br>
+>
+> dest: ~/Documents/Github.com<br>
+> branch: main
 ---
 
 ## 项目动机
@@ -130,4 +135,7 @@
 > • 所有平台的二进制文件均可在每个 GitHub Release 页面获取。
 
 ## 修改默认设置
-> 创建 `~/.gitso.yaml` 文件
+> 创建 `~/.gitso.yaml` 文件并添加<br>
+> 
+> dest: ~/Documents/Github.com<br> 
+> branch: main
