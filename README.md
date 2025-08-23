@@ -76,7 +76,8 @@
 
 > **Tips**  
 > • Detect CPU arch: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
-> • macOS requires removing quarantine tags when installing via platform binaries. <br>remove quarantine tags commend:`sudo xattr -d com.apple.quarantine /usr/local/bin/gitso`<br>
+> • macOS requires removing quarantine tags when installing via platform binaries. <br>
+> • remove quarantine tags commend:`sudo xattr -d com.apple.quarantine /usr/local/bin/gitso`<br>
 > • On macOS, Homebrew automatically removes the quarantine flag, so no extra steps are needed.  
 > • All binaries are available on every GitHub Release page.
 >
@@ -164,7 +165,8 @@
 
 > **提示**  
 > • 检测 CPU 架构: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
-> • macOS 通过 平台的二进制文件 安装时需移除 quarantine 标记，移除命令：`sudo xattr -d com.apple.quarantine /usr/local/bin/gitso`
+> • macOS 通过 平台的二进制文件 安装时需移除 quarantine 标记<br>
+> • 移除命令：`sudo xattr -d com.apple.quarantine /usr/local/bin/gitso`<br>
 > • macOS 通过 Homebrew 安装时会自动移除 quarantine 标记，无需额外操作  
 > • 所有平台的二进制文件均可在每个 GitHub Release 页面获取。
 
