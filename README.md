@@ -10,6 +10,19 @@
 > If the host doesn’t have a system-wide `git`, it silently falls back to an embedded **go-git** engine, so it even works inside scratch containers and FaaS.
 
 ---
+
+## Usage examples
+      ```bash
+      gitso git@github.com:d3Lap1ace/homebrew-gitso.git
+      gitso https://github.com/d3Lap1ace/homebrew-gitso.git
+
+      # clone into ~/Code
+      gitso -d ~/Code git@github.com:d3Lap1ace/homebrew-gitso.git
+
+      # clone dev branch
+      gitso -b dev https://github.com/d3Lap1ace/homebrew-gitso.git
+      ```
+
 ## Rendering
 ![img.png](img/render_en.png)
 
@@ -83,6 +96,19 @@
 > 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
 
 ---
+
+## 使用示例
+      ```bash
+      gitso git@github.com:d3Lap1ace/homebrew-gitso.git
+      gitso https://github.com/d3Lap1ace/homebrew-gitso.git
+
+      # clone into ~/Code
+      gitso -d ~/Code git@github.com:d3Lap1ace/homebrew-gitso.git
+
+      # clone dev branch
+      gitso -b dev https://github.com/d3Lap1ace/homebrew-gitso.git
+      ```
+
 ## 效果图
 
 
