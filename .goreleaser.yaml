@@ -18,7 +18,7 @@ builds:
   - id: gitso
     main: .
     env: [CGO_ENABLED=0]
-    goos: [macOS, linux, windows]
+    goos: [darwin, linux, windows]
     goarch: [amd64, arm64]
     ldflags:
       - -s -w
@@ -28,13 +28,11 @@ builds:
 archives:
   - id: default
     format: tar.gz
-    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    # darwin → macOS, everything else unchanged
+    name_template: "{{ .ProjectName }}_{{ if eq .Os \"darwin\" }}macOS{{ else }}{{ .Os }}{{ end }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
         format: zip
-    files:
-      - LICENSE
-      - README.md
 checksum:
   name_template: "checksums.txt"
 changelog:

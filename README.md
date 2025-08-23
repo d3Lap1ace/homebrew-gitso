@@ -43,25 +43,13 @@
       gitso --help
       ```
 
-2. **macOS**<br>
-    * **Apple Silicon**<br>
-    Download `gitso_macOS_arm64.tar.gz`
-      ```bash
-      tar -zxvf gitso_macOS_arm64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # run once
-      gitso --help
-      ```
-    * **Intel**<br>
-    Download `gitso_macOS_amd64.tar.gz`
-    * ```bash
-      tar -zxvf gitso_windows_amd64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso # run once
-      gitso --help
-      ```
+2. **macOS** (Apple Silicon & Intel)<br>
+   Install via **Homebrew**  
+   ```bash
+   brew tap d3Lap1ace/gitso
+   brew install gitso
+   gitso --help
+   ```
 
 3. **Windows**
     * **amd64**
@@ -71,11 +59,7 @@
 
 > **Tips**  
 > • Detect CPU arch: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
-> • On macOS, if Gatekeeper blocks the binary, execute
->   ```bash
->   sudo xattr -d com.apple.quarantine /usr/local/bin/gitso
->   ```  
->   once.  
+> • On macOS, Homebrew automatically removes the quarantine flag, so no extra steps are needed.  
 > • All binaries are available on every GitHub Release page.
 
 ---
@@ -126,25 +110,13 @@
       gitso --help
       ```
 
-2. **macOS**<br>
-    * **Apple Silicon**<br>
-      下载 `gitso_macOS_arm64.tar.gz`
-      ```bash
-      tar -zxvf gitso_macOS_arm64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # 仅需执行一次
-      gitso --help
-      ```
-    * **Intel**<br>
-      下载 `gitso_macOS_amd64.tar.gz`
-      ```bash
-      tar -zxvf gitso_macOS_amd64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # 仅需执行一次
-      gitso --help
-      ```
+2. **macOS**（Apple Silicon 与 Intel）<br>
+   使用 **Homebrew** 安装  
+   ```bash
+   brew tap d3Lap1ace/gitso
+   brew install gitso
+   gitso --help
+   ```
 
 3. **Windows**
     * **amd64**
@@ -154,10 +126,7 @@
 
 > **提示**  
 > • 检测 CPU 架构: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
-> • 在 macOS 上，如果 Gatekeeper 阻止执行，仅需执行一次。运行  
->   ```bash
->   sudo xattr -d com.apple.quarantine /usr/local/bin/gitso
->   ```
+> • macOS 通过 Homebrew 安装时会自动移除 quarantine 标记，无需额外操作  
 > • 所有平台的二进制文件均可在每个 GitHub Release 页面获取。
 
 ## 修改默认设置

@@ -3,6 +3,7 @@ gitso
 gitso.exe
 *.test
 coverage.out
+Formula/
 
 # ── 2. GoReleaser output ─────────────────
 dist/
