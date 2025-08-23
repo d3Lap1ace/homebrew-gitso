@@ -1,9 +1,13 @@
-# gitso
+<p align="right">
+  🌐 <a href="#english">English</a> | <a href="#中文">中文</a>
+</p>
+<a id="english"></a>
 
-> **Clone → Organize → Done**  
-> `gitso` is a zero-friction CLI that clones any GitHub repository (HTTPS **or** SSH) and files it under a predictable tree  
+# gitso
+ 
+> `gitso` is a CLI tool that clones any GitHub repository (HTTPS **or** SSH) and files it under a predictable tree  
 > `~/Documents/GitHub.com/<owner>/<repo>`.  
-> If the host doesn’t have a system-wide `git`, it silently falls back to an embedded **go-git** engine, so it also works inside scratch containers and FaaS.
+> If the host doesn’t have a system-wide `git`, it silently falls back to an embedded **go-git** engine, so it even works inside scratch containers and FaaS.
 
 ---
 
@@ -21,20 +25,140 @@
 
 ## Installation
 
-| Platform | Quick start |
-|----------|-------------|
-| **macOS / Linux** | **Binary** (current)\*: download latest `gitso_<os>_<arch>.tar.gz` →<br>`tar -xf … && sudo mv gitso /usr/local/bin` |
-| **Windows** | **Binary**: download `gitso_<ver>_windows_amd64.zip` → unzip and put `gitso.exe` in `%PATH%` |
-| *(coming soon)* | **Homebrew** `brew install gitso` &nbsp;•&nbsp; **Scoop** `scoop install gitso` |
+1. **Linux**<br>
+    * **amd64**<br>
+   Download `gitso_linux_amd64.tar.gz`
+      ```bash
+      tar -zxvf gitso_linux_amd64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      gitso --help
+      ```
+    * **arm64**<br>
+   Download `gitso_linux_arm64.tar.gz`
+      ```bash
+      tar -zxvf gitso_linux_arm64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      gitso --help
+      ```
 
-\* Pre-compiled binaries are linked on every GitHub Release.
+2. **macOS**<br>
+    * **Apple Silicon**<br>
+    Download `gitso_macOS_arm64.tar.gz`
+      ```bash
+      tar -zxvf gitso_macOS_arm64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # run once
+      gitso --help
+      ```
+    * **Intel**<br>
+    Download `gitso_macOS_amd64.tar.gz`
+    * ```bash
+      tar -zxvf gitso_windows_amd64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso # run once
+      gitso --help
+      ```
 
+3. **Windows**
+    * **amd64**
+        1. Download `gitso_windows_amd64.zip`
+        2. Unzip `gitso.exe` into a directory on `%PATH%` (e.g. `C:\Tools\`)
+        3. Open a new PowerShell / CMD and run `gitso --help`
 
-## Global config
+> **Tips**  
+> • Detect CPU arch: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
+> • On macOS, if Gatekeeper blocks the binary, execute
+>   ```bash
+>   sudo xattr -d com.apple.quarantine /usr/local/bin/gitso
+>   ```  
+>   once.  
+> • All binaries are available on every GitHub Release page.
 
-Modify `gitso/.gitso.yaml` (respects `GITSO_*` env too):
+---
 
-```yaml
-# Global defaults
-dest: "~/Documents/GitHub.com"  # Base directory
-branch: "main"                  # Default branch
+<a id="中文"></a>
+
+<p align="right">
+  🌐 <a href="#english">English</a> | <a href="#中文">中文</a>
+</p>
+
+# gitso
+ 
+> `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），并将其按可预测的目录树存放到  
+> `~/Documents/GitHub.com/<owner>/<repo>`。  
+> 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
+
+---
+
+## 项目动机
+
+| 痛点 | gitso 的解决方案 |
+|------------|----------------|
+| 仓库散落在随机文件夹 | 统一的根目录结构将所有仓库集中管理 |
+| 最小化容器 / CI 镜像缺少 `git` | 当系统缺少 `git` 时，自动切换到纯 Go 实现 |
+| 保持仓库最新 | 检测已存在仓库 → 执行 `git pull --ff-only` |
+| 每次工作前需手动 `cd && git pull` | 一条命令，无需手动导航 |
+| 重复输入相同选项 | 使用全局 `~/.gitso.yaml` 或 `GITSO_*` 环境变量设定默认值 |
+
+---
+
+## 安装
+
+1. **Linux**<br>
+    * **amd64**<br>
+      下载 `gitso_linux_amd64.tar.gz`
+      ```bash
+      tar -zxvf gitso_linux_amd64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      gitso --help
+      ```
+    * **arm64**<br>
+      下载 `gitso_linux_arm64.tar.gz`
+      ```bash
+      tar -zxvf gitso_linux_arm64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      gitso --help
+      ```
+
+2. **macOS**<br>
+    * **Apple Silicon**<br>
+      下载 `gitso_macOS_arm64.tar.gz`
+      ```bash
+      tar -zxvf gitso_macOS_arm64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # 仅需执行一次
+      gitso --help
+      ```
+    * **Intel**<br>
+      下载 `gitso_macOS_amd64.tar.gz`
+      ```bash
+      tar -zxvf gitso_macOS_amd64.tar.gz gitso
+      sudo chmod +x gitso
+      sudo mv gitso/gitso /usr/local/bin
+      sudo xattr -d com.apple.quarantine /usr/local/bin/gitso   # 仅需执行一次
+      gitso --help
+      ```
+
+3. **Windows**
+    * **amd64**
+        1. 下载 `gitso_windows_amd64.zip`
+        2. 将 `gitso.exe` 解压至 `%PATH%` 中的某个目录（例如 `C:\Tools\`）
+        3. 打开新的 PowerShell / CMD 并运行 `gitso --help`
+
+> **提示**  
+> • 检测 CPU 架构: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
+> • 在 macOS 上，如果 Gatekeeper 阻止执行，仅需执行一次。运行  
+>   ```bash
+>   sudo xattr -d com.apple.quarantine /usr/local/bin/gitso
+>   ```
+> • 所有平台的二进制文件均可在每个 GitHub Release 页面获取。
+
+## 修改默认设置
+> 创建 `~/.gitso.yaml` 文件

@@ -27,6 +27,7 @@ import (
 	"gitso-cli/internal/downloader"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -90,6 +91,16 @@ func init() {
 func initConfig() {
 	viper.SetConfigName(".gitso")
 	viper.SetConfigType("yaml")
+	// Prefer config in the user's home directory (~/.gitso.yaml); fall back to current directory
+	if home, err := os.UserHomeDir(); err == nil {
+		viper.AddConfigPath(home)
+		// Default dest is ~/Documents/GitHub.com
+		viper.SetDefault("dest", filepath.Join(home, "Documents", "GitHub.com"))
+	}
 	viper.AddConfigPath(".")
-	_ = viper.ReadInConfig()
+
+	// Default branch when not specified anywhere
+	viper.SetDefault("branch", "main")
+
+	_ = viper.ReadInConfig() // ignore error if the file does not exist
 }

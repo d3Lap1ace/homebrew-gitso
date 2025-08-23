@@ -18,7 +18,7 @@ builds:
   - id: gitso
     main: .
     env: [CGO_ENABLED=0]
-    goos: [darwin, linux, windows]
+    goos: [macOS, linux, windows]
     goarch: [amd64, arm64]
     ldflags:
       - -s -w
