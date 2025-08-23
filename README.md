@@ -96,26 +96,26 @@
     * **amd64**<br>
       下载 `gitso_linux_amd64.tar.gz`
       ```bash
-      tar -zxvf gitso_linux_amd64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      gitso --help
+      tar -zxvf gitso_linux_amd64.tar.gz gitso \
+      && sudo chmod +x gitso \
+      && sudo mv gitso/gitso /usr/local/bin \
+      && gitso --help
       ```
     * **arm64**<br>
       下载 `gitso_linux_arm64.tar.gz`
       ```bash
-      tar -zxvf gitso_linux_arm64.tar.gz gitso
-      sudo chmod +x gitso
-      sudo mv gitso/gitso /usr/local/bin
-      gitso --help
+      tar -zxvf gitso_linux_arm64.tar.gz gitso \
+      && sudo chmod +x gitso \
+      && sudo mv gitso/gitso /usr/local/bin \
+      && gitso --help
       ```
 
 2. **macOS**（Apple Silicon 与 Intel）<br>
    使用 **Homebrew** 安装  
    ```bash
-   brew tap d3Lap1ace/gitso
-   brew install gitso
-   gitso --help
+   brew tap d3Lap1ace/gitso \
+   && brew install gitso \
+   && gitso --help
    ```
 
 3. **Windows**
