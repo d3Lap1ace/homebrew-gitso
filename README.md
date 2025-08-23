@@ -5,11 +5,13 @@
 
 # gitso
  
-> `gitso` is a CLI tool that clones any GitHub repository (HTTPS **or** SSH) and files it under a predictable tree  
+> `gitso` is a CLI tool that clones any GitHub repository (HTTPS **or** SSH) and files it under a predictable tree by owner or domain name 
 > `~/Documents/GitHub.com/<owner>/<repo>`.  
 > If the host doesn’t have a system-wide `git`, it silently falls back to an embedded **go-git** engine, so it even works inside scratch containers and FaaS.
 
 ---
+## Rendering
+![img.png](img/render_en.png)
 
 ## Project motivation
 
@@ -19,7 +21,6 @@
 | Minimal containers / CI images lack `git` | Falls back to pure-Go implementation when `git` isn’t present |
 | Keeping repos up-to-date | Detects existing repo → runs `git pull --ff-only` |
 | Tedious `cd && git pull` before work | One command, no manual navigation |
-| Re-entering the same options | Global `~/.gitso.yaml` or `GITSO_*` envs provide defaults |
 
 ---
 
@@ -30,6 +31,7 @@
    Download `gitso_linux_amd64.tar.gz`
       ```bash
       tar -zxvf gitso_linux_amd64.tar.gz gitso \
+      && cd gitso \
       && sudo chmod +x gitso \
       && sudo mv gitso/gitso /usr/local/bin \
       && gitso --help
@@ -38,15 +40,17 @@
    Download `gitso_linux_arm64.tar.gz`
       ```bash
       tar -zxvf gitso_linux_arm64.tar.gz gitso \
+      && cd gitso \
       && sudo chmod +x gitso \
       && sudo mv gitso/gitso /usr/local/bin \
       && gitso --help
       ```
 
-2. **macOS** (Apple Silicon & Intel)<br>
+2. **macOS**<br>
    Install via **Homebrew**  
    ```bash
    brew tap d3Lap1ace/gitso \
+   && cd gitso \
    && brew install gitso \
    && gitso --help
    ```
@@ -63,10 +67,7 @@
 > • All binaries are available on every GitHub Release page.
 >
 ## Modify default settings
-> Create `~/.gitso.yaml`<br>
->
-> dest: ~/Documents/Github.com<br>
-> branch: main
+> `gitos config --dest <your file directory>`
 ---
 
 <a id="中文"></a>
@@ -76,12 +77,14 @@
 </p>
 
 # gitso
- 
-> `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），并将其按可预测的目录树存放到  
+![img.png](img/render_ch.png)
+> `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），根据域名作者名并将其按可预测的目录树存放到  
 > `~/Documents/GitHub.com/<owner>/<repo>`。  
 > 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
 
 ---
+## 效果图
+
 
 ## 项目动机
 
@@ -91,7 +94,7 @@
 | 最小化容器 / CI 镜像缺少 `git` | 当系统缺少 `git` 时，自动切换到纯 Go 实现 |
 | 保持仓库最新 | 检测已存在仓库 → 执行 `git pull --ff-only` |
 | 每次工作前需手动 `cd && git pull` | 一条命令，无需手动导航 |
-| 重复输入相同选项 | 使用全局 `~/.gitso.yaml` 或 `GITSO_*` 环境变量设定默认值 |
+
 
 ---
 
@@ -102,6 +105,7 @@
       下载 `gitso_linux_amd64.tar.gz`
       ```bash
       tar -zxvf gitso_linux_amd64.tar.gz gitso \
+      && cd gitso \
       && sudo chmod +x gitso \
       && sudo mv gitso/gitso /usr/local/bin \
       && gitso --help
@@ -110,15 +114,17 @@
       下载 `gitso_linux_arm64.tar.gz`
       ```bash
       tar -zxvf gitso_linux_arm64.tar.gz gitso \
+      && cd gitso \
       && sudo chmod +x gitso \
       && sudo mv gitso/gitso /usr/local/bin \
       && gitso --help
       ```
 
-2. **macOS**（Apple Silicon 与 Intel）<br>
+2. **macOS**<br>
    使用 **Homebrew** 安装  
    ```bash
    brew tap d3Lap1ace/gitso \
+   && cd gitso \
    && brew install gitso \
    && gitso --help
    ```
@@ -135,7 +141,4 @@
 > • 所有平台的二进制文件均可在每个 GitHub Release 页面获取。
 
 ## 修改默认设置
-> 创建 `~/.gitso.yaml` 文件并添加<br>
-> 
-> dest: ~/Documents/Github.com<br> 
-> branch: main
+> `gitos config --dest <你的文件目录>`
