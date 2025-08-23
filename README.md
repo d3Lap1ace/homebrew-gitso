@@ -61,7 +61,12 @@
 > • Detect CPU arch: `uname -m` (Linux/macOS) / `wmic os get osarchitecture` (Windows)  
 > • On macOS, Homebrew automatically removes the quarantine flag, so no extra steps are needed.  
 > • All binaries are available on every GitHub Release page.
-
+>
+## Modify default settings
+> Create `~/.gitso.yaml`<br>
+>
+> dest: ~/Documents/Github.com<br>
+> branch: main
 ---
 
 <a id="中文"></a>
@@ -75,12 +80,7 @@
 > `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），并将其按可预测的目录树存放到  
 > `~/Documents/GitHub.com/<owner>/<repo>`。  
 > 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
-> 
-## Modify default settings
-> Create `~/.gitso.yaml`<br>
->
-> dest: ~/Documents/Github.com<br>
-> branch: main
+
 ---
 
 ## 项目动机
