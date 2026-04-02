@@ -1,6 +1,6 @@
 # ── 1. Go build artifacts ────────────────
-gitso
-gitso.exe
+sugit
+sugit.exe
 *.test
 coverage.out
 

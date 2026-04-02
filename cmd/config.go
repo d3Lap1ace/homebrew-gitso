@@ -12,10 +12,10 @@ var cfgDest string
 
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "View or update gitso default destination",
+	Short: "View or update sugit default destination",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		home, _ := os.UserHomeDir()
-		cfg := filepath.Join(home, ".gitso_dest")
+		cfg := filepath.Join(home, ".sugit_dest")
 
 		if cfgDest != "" {
 			abs, _ := filepath.Abs(cfgDest)

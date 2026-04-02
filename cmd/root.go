@@ -24,7 +24,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"gitso-cli/internal/downloader"
+	"sugit-cli/internal/downloader"
 	"log"
 	"os"
 )
@@ -38,7 +38,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "gitso <repo-url>",
+	Use:   "sugit <repo-url>",
 	Short: "Clone GitHub repo (HTTPS or SSH) into ~/Documents/GitHub.com/{owner}/{repo}",
 	Args:  cobra.ExactArgs(1),
 	// Whenever the user enters only the root command
@@ -80,7 +80,7 @@ func init() {
 }
 
 func loadDefaultDest() string {
-	if env := os.Getenv("GITSO_DEST"); env != "" {
+	if env := os.Getenv("SUGIT_DEST"); env != "" {
 		return env
 	}
 	return defaultDest

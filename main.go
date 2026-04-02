@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "gitso-cli/cmd"
+import "sugit-cli/cmd"
 
 func main() {
 	cmd.Execute()

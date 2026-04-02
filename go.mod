@@ -1,4 +1,4 @@
-module gitso-cli
+module sugit-cli
 
 go 1.24
 

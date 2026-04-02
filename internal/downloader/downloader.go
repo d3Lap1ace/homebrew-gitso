@@ -15,7 +15,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	gitssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
 
-	"gitso-cli/internal/common"
+	"sugit-cli/internal/common"
 )
 
 const defaultBase = "~/Documents/GitHub.com"
