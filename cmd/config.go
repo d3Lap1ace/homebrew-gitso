@@ -15,7 +15,7 @@ var configCmd = &cobra.Command{
 	Short: "View or update sugit default destination",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		home, _ := os.UserHomeDir()
-		cfg := filepath.Join(home, ".sugit_dest")
+		cfg := filepath.Join(home, ".sugit_config")
 
 		if cfgDest != "" {
 			abs, _ := filepath.Abs(cfgDest)

@@ -9,16 +9,16 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/go-git/go-git/v5"
+	"sugit/internal/common"
+
+	gogit "github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport"
-	"github.com/go-git/go-git/v5/plumbing/transport/http"
-	gitssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
-
-	"sugit-cli/internal/common"
+	gogithttp "github.com/go-git/go-git/v5/plumbing/transport/http"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
-const defaultBase = "~/Documents/GitHub.com"
+const defaultBase = "~/Code/Github.com"
 
 type Task struct {
 	URL    string
@@ -68,7 +68,7 @@ func parseURL(u string) (repoMeta, error) {
 		return repoMeta{Host: m[2], Owner: m[3], Repo: repo, URL: u}, nil
 	case httpLike.MatchString(u):
 		m := httpLike.FindStringSubmatch(u)
-		repo := strings.TrimSuffix(m[4], ".git")
+		repo := strings.TrimSuffix(m[3], ".git")
 		return repoMeta{Host: m[1], Owner: m[2], Repo: repo, URL: u}, nil
 	default:
 		return repoMeta{}, fmt.Errorf("unsupported git url: %s", u)
@@ -76,59 +76,82 @@ func parseURL(u string) (repoMeta, error) {
 }
 
 func cloneRepo(meta repoMeta, branch, dest string) error {
-
-	if path, err := exec.LookPath("git"); err == nil {
+	path, err := exec.LookPath("git")
+	if err == nil {
 		args := []string{"clone", "--depth", "1"}
 		if branch != "" {
 			args = append(args, "-b", branch)
 		}
 		args = append(args, meta.URL, dest)
-
 		cmd := exec.Command(path, args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		return cmd.Run()
 	}
-	// --- fallback: go-git ----------------------------------
-	auth, _ := detectAuth(meta.URL)
 
-	opts := &git.CloneOptions{URL: meta.URL, Auth: auth, Depth: 1}
+	// Fallback: use embedded go-git when system git is unavailable.
+	auth, err := detectAuth(meta)
+	if err != nil {
+		return fmt.Errorf("go-git auth: %w", err)
+	}
+	opts := &gogit.CloneOptions{
+		URL:   meta.URL,
+		Auth:  auth,
+		Depth: 1,
+	}
 	if branch != "" {
 		opts.ReferenceName = plumbing.NewBranchReferenceName(branch)
 		opts.SingleBranch = true
 	}
-	_, err := git.PlainClone(dest, false, opts)
+	_, err = gogit.PlainClone(dest, false, opts)
 	return err
 }
 
 func gitPull(repoPath string, branch string) error {
 	path, err := exec.LookPath("git")
+	if err == nil {
+		args := []string{"-C", repoPath, "pull", "--ff-only"}
+		if branch != "" {
+			args = append(args, "origin", branch)
+		}
+		cmd := exec.Command(path, args...)
+		cmd.Stdout = io.Discard
+		cmd.Stderr = os.Stderr
+		return cmd.Run()
+	}
+
+	// Fallback: use embedded go-git.
+	repo, err := gogit.PlainOpen(repoPath)
 	if err != nil {
+		return err
+	}
+	wt, err := repo.Worktree()
+	if err != nil {
+		return err
+	}
+	opts := &gogit.PullOptions{RemoteName: "origin", Auth: nil}
+	if branch != "" {
+		opts.ReferenceName = plumbing.NewBranchReferenceName(branch)
+	}
+	err = wt.Pull(opts)
+	if err == gogit.NoErrAlreadyUpToDate {
 		return nil
 	}
-	args := []string{"-C", repoPath, "pull", "--ff-only"}
-	if branch != "" {
-		args = append(args, "origin", branch)
-	}
-	cmd := exec.Command(path, args...)
-	cmd.Stdout = io.Discard
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	return err
 }
 
-// detectAuth Only for go-git fallback
-func detectAuth(repoURL string) (transport.AuthMethod, error) {
-	switch {
-	case strings.HasPrefix(repoURL, "https://"):
+func detectAuth(meta repoMeta) (transport.AuthMethod, error) {
+	if strings.HasPrefix(meta.URL, "https") {
 		if token := os.Getenv("GITHUB_TOKEN"); token != "" {
-			return &http.BasicAuth{Username: "token", Password: token}, nil
+			return &gogithttp.BasicAuth{Username: "x-access-token", Password: token}, nil
 		}
-	case strings.HasPrefix(repoURL, "ssh://") || sshLike.MatchString(repoURL):
-		key := filepath.Join(os.Getenv("HOME"), ".ssh", "id_rsa")
-		if _, err := os.Stat(key); err != nil {
-			return nil, fmt.Errorf("ssh key not found: %s", key)
-		}
-		return gitssh.NewPublicKeysFromFile("git", key, "")
+		return nil, nil
 	}
-	return nil, nil
+	// SSH
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	keyPath := filepath.Join(home, ".ssh", "id_rsa")
+	return ssh.NewPublicKeysFromFile("git", keyPath, "")
 }

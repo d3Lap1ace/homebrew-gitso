@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "sugit-cli/cmd"
+import "sugit/cmd"
 
 func main() {
 	cmd.Execute()

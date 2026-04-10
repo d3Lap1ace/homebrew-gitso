@@ -23,13 +23,16 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"sugit-cli/internal/downloader"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/spf13/cobra"
+	"sugit/internal/downloader"
 )
 
-const defaultDest = "~/Documents/Github.com"
+const defaultDest = "~/Code/Github.com"
 
 var (
 	destBase string
@@ -82,6 +85,14 @@ func init() {
 func loadDefaultDest() string {
 	if env := os.Getenv("SUGIT_DEST"); env != "" {
 		return env
+	}
+	home, err := os.UserHomeDir()
+	if err == nil {
+		if data, err := os.ReadFile(filepath.Join(home, ".sugit_config")); err == nil {
+			if s := strings.TrimSpace(string(data)); s != "" {
+				return s
+			}
+		}
 	}
 	return defaultDest
 }
