@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-`sugit` is a Go CLI tool that clones GitHub repositories (HTTPS or SSH) into a predictable directory tree: `~/Documents/GitHub.com/<owner>/<repo>`. It prefers the system `git` binary and falls back to the embedded `go-git` engine when `git` is not on `$PATH`. If the target repo already exists locally, it runs `git pull --ff-only` instead of cloning.
+`sugit` is a Go CLI tool that clones GitHub repositories (HTTPS or SSH) into a predictable directory tree: `~/Code/GitHub.com/<owner>/<repo>`. It prefers the system `git` binary and falls back to the embedded `go-git` engine when `git` is not on `$PATH`. If the target repo already exists locally, it runs `git pull --ff-only` instead of cloning.
 
 ## Commands
 
@@ -28,8 +28,8 @@ go test ./...
 The entry point is `main.go` → `cmd.Execute()` (Cobra root command).
 
 **`cmd/`** — Cobra command definitions
-- `root.go`: Root command. Accepts one positional arg (repo URL) and flags `-d`/`--dest` and `-b`/`--branch`. Resolves the destination via: CLI flag → `SUGIT_DEST` env var → hardcoded `~/Documents/Github.com`. Then calls `downloader.Clone`.
-- `config.go`: `sugit config --dest <path>` subcommand. Writes `~/.sugit_dest` to persist the default destination (note: this file is not currently read back by `loadDefaultDest()`).
+- `root.go`: Root command. Accepts one positional arg (repo URL) and flags `-d`/`--dest` and `-b`/`--branch`. Resolves the destination via `loadDefaultDest()`: CLI flag → `SUGIT_DEST` env var → `~/.sugit_config` file → hardcoded `~/Code/Github.com`. Then calls `downloader.Clone`.
+- `config.go`: `sugit config --dest <path>` subcommand. Writes `~/.sugit_config` to persist the default destination; running `sugit config` with no flag prints the current default. This file is read back by `loadDefaultDest()`.
 
 **`internal/downloader/downloader.go`** — Core logic
 - `Clone()`: Parses the URL, builds the local path as `<destBase>/<owner>/<repo>`, detects existing repos (pulls) vs new ones (clones).

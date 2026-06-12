@@ -42,7 +42,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "sugit <repo-url>",
-	Short: "Clone GitHub repo (HTTPS or SSH) into ~/Documents/GitHub.com/{owner}/{repo}",
+	Short: "Clone GitHub repo (HTTPS or SSH) into ~/Code/GitHub.com/{owner}/{repo}",
 	Args:  cobra.ExactArgs(1),
 	// Whenever the user enters only the root command
 	Run: func(cmd *cobra.Command, args []string) {

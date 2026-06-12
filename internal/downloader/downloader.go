@@ -20,13 +20,7 @@ import (
 
 const defaultBase = "~/Code/Github.com"
 
-type Task struct {
-	URL    string
-	Branch string // Default branch
-}
-
 type repoMeta struct {
-	Host  string
 	Owner string
 	Repo  string
 	URL   string
@@ -65,11 +59,11 @@ func parseURL(u string) (repoMeta, error) {
 	case sshLike.MatchString(u):
 		m := sshLike.FindStringSubmatch(u)
 		repo := strings.TrimSuffix(m[4], ".git")
-		return repoMeta{Host: m[2], Owner: m[3], Repo: repo, URL: u}, nil
+		return repoMeta{Owner: m[3], Repo: repo, URL: u}, nil
 	case httpLike.MatchString(u):
 		m := httpLike.FindStringSubmatch(u)
 		repo := strings.TrimSuffix(m[3], ".git")
-		return repoMeta{Host: m[1], Owner: m[2], Repo: repo, URL: u}, nil
+		return repoMeta{Owner: m[2], Repo: repo, URL: u}, nil
 	default:
 		return repoMeta{}, fmt.Errorf("unsupported git url: %s", u)
 	}

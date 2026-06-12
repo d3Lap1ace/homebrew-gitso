@@ -1,5 +1,5 @@
 class Sugit < Formula
-  desc      "Clone GitHub repo into ~/Documents/GitHub.com/<owner>/<repo>"
+  desc      "Clone GitHub repo into ~/Code/GitHub.com/<owner>/<repo>"
   homepage  "https://github.com/d3Lap1ace/sugit"
   url       "https://github.com/d3Lap1ace/sugit/archive/refs/tags/v0.1.4.tar.gz"
   sha256    "PUT_SOURCE_TARBALL_SHA256_HERE"
