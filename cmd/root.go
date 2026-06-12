@@ -29,7 +29,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"sugit/internal/downloader"
+	"gitso/internal/downloader"
 )
 
 const defaultDest = "~/Code/Github.com"
@@ -41,7 +41,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "sugit <repo-url>",
+	Use:   "gitso <repo-url>",
 	Short: "Clone GitHub repo (HTTPS or SSH) into ~/Code/GitHub.com/{owner}/{repo}",
 	Args:  cobra.ExactArgs(1),
 	// Whenever the user enters only the root command
@@ -83,12 +83,12 @@ func init() {
 }
 
 func loadDefaultDest() string {
-	if env := os.Getenv("SUGIT_DEST"); env != "" {
+	if env := os.Getenv("GITSO_DEST"); env != "" {
 		return env
 	}
 	home, err := os.UserHomeDir()
 	if err == nil {
-		if data, err := os.ReadFile(filepath.Join(home, ".sugit_config")); err == nil {
+		if data, err := os.ReadFile(filepath.Join(home, ".gitso_config")); err == nil {
 			if s := strings.TrimSpace(string(data)); s != "" {
 				return s
 			}

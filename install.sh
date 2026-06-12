@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
-REPO="d3Lap1ace/sugit"
-BIN="sugit"
+REPO="d3Lap1ace/gitso"
+BIN="gitso"
 INSTALL_DIR="/usr/local/bin"
 
 # ── detect OS ────────────────────────────────────────────────────────────────
@@ -44,7 +44,7 @@ URL="https://github.com/${REPO}/releases/download/${VERSION}/${ARCHIVE}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-echo "Downloading sugit ${VERSION} (${OS_LABEL}/${ARCH_LABEL})..."
+echo "Downloading gitso ${VERSION} (${OS_LABEL}/${ARCH_LABEL})..."
 curl -fsSL "$URL" -o "${TMP}/${ARCHIVE}"
 tar -xzf "${TMP}/${ARCHIVE}" -C "$TMP"
 

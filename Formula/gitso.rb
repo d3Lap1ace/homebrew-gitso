@@ -1,7 +1,7 @@
-class Sugit < Formula
+class Gitso < Formula
   desc      "Clone GitHub repo into ~/Code/GitHub.com/<owner>/<repo>"
-  homepage  "https://github.com/d3Lap1ace/sugit"
-  url       "https://github.com/d3Lap1ace/sugit/archive/refs/tags/v0.1.4.tar.gz"
+  homepage  "https://github.com/d3Lap1ace/gitso"
+  url       "https://github.com/d3Lap1ace/gitso/archive/refs/tags/v0.1.4.tar.gz"
   sha256    "PUT_SOURCE_TARBALL_SHA256_HERE"
   license   "MIT"
 
@@ -19,19 +19,19 @@ class Sugit < Formula
 
     ldflags = %W[
       -s -w
-      -X sugit/cmd.version=#{version}
-      -X sugit/cmd.commit=#{commit}
-      -X sugit/cmd.date=#{date}
+      -X gitso/cmd.version=#{version}
+      -X gitso/cmd.commit=#{commit}
+      -X gitso/cmd.date=#{date}
     ]
 
     ENV["CGO_ENABLED"] = "0"
     system "go", "build", *std_go_args(
       ldflags:  ldflags,
-      output:   bin/"sugit",
-    ), "./cmd/sugit"
+      output:   bin/"gitso",
+    ), "."
   end
 
   test do
-    assert_match "Clone GitHub repo", shell_output("#{bin}/sugit --help")
+    assert_match "Clone GitHub repo", shell_output("#{bin}/gitso --help")
   end
 end
