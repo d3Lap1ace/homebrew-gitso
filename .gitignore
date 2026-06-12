@@ -18,4 +18,6 @@ checksums.txt
 *.sw?
 Thumbs.db
 
+# ── 5. Local agent files ─────────────────
+AGENTS.md
 

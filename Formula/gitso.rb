@@ -1,8 +1,8 @@
 class Gitso < Formula
   desc      "Clone GitHub repo into ~/Code/GitHub.com/<owner>/<repo>"
   homepage  "https://github.com/d3Lap1ace/gitso"
-  url       "https://github.com/d3Lap1ace/gitso/archive/refs/tags/v0.1.4.tar.gz"
-  sha256    "34fb0bdac9bce3033f6b288a3b479d3e6d221e187206a9305cbbc91679177259"
+  url       "https://github.com/d3Lap1ace/gitso/archive/refs/tags/v0.1.5.tar.gz"
+  sha256    "5dcd6f8d791e2d6750ae33c10cb8f58f00bda3e77c04fdb8bc00f70b9c6036db"
   license   "MIT"
 
   livecheck do
