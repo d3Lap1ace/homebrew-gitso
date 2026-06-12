@@ -45,7 +45,7 @@ gitso -b dev https://github.com/owner/repo.git
 
 **Linux / macOS — one-liner**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
 ```
 
 **macOS — Homebrew**
@@ -141,7 +141,7 @@ gitso -b dev https://github.com/owner/repo.git
 
 **Linux / macOS — 一行命令**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
 ```
 
 **macOS — Homebrew**
