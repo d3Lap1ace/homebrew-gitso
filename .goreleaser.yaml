@@ -1,19 +1,9 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
-
-# The lines below are called `modelines`. See `:help modeline`
-# Feel free to remove those if you don't want/need to use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
-# vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
-version: 1
+version: 2
 
 project_name: gitso
 
-before:
-  hooks:
-    # You may remove this if you don't use go modules.
-    - go mod tidy
 builds:
   - id: gitso
     main: .
@@ -24,14 +14,14 @@ builds:
       - -s -w
 archives:
   - id: default
-    format: tar.gz
-    # darwin → macOS, everything else unchanged
+    formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ if eq .Os \"darwin\" }}macOS{{ else }}{{ .Os }}{{ end }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 checksum:
   name_template: "checksums.txt"
+  algorithm: sha256
 changelog:
   sort: asc
   filters:

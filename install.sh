@@ -1,66 +1,64 @@
 #!/usr/bin/env sh
-set -e
+set -eu
 
 REPO="d3Lap1ace/gitso"
 BIN="gitso"
-INSTALL_DIR="/usr/local/bin"
+INSTALL_DIR="${GITSO_INSTALL_DIR:-/usr/local/bin}"
+BASE_URL="https://github.com/${REPO}/releases/latest/download"
 
-# ── detect OS ────────────────────────────────────────────────────────────────
-OS="$(uname -s)"
-case "$OS" in
-  Darwin) OS_LABEL="macOS" ;;
-  Linux)  OS_LABEL="linux" ;;
-  *)
-    echo "Unsupported OS: $OS" >&2
-    exit 1
-    ;;
+case "$(uname -s)" in
+  Darwin) OS="macOS" ;;
+  Linux)  OS="linux" ;;
+  *) echo "gitso: unsupported operating system: $(uname -s)" >&2; exit 1 ;;
 esac
 
-# ── detect arch ──────────────────────────────────────────────────────────────
-ARCH="$(uname -m)"
-case "$ARCH" in
-  x86_64)          ARCH_LABEL="amd64" ;;
-  arm64 | aarch64) ARCH_LABEL="arm64" ;;
-  *)
-    echo "Unsupported architecture: $ARCH" >&2
-    exit 1
-    ;;
+case "$(uname -m)" in
+  x86_64 | amd64)  ARCH="amd64" ;;
+  arm64 | aarch64) ARCH="arm64" ;;
+  *) echo "gitso: unsupported architecture: $(uname -m)" >&2; exit 1 ;;
 esac
 
-# ── resolve latest version ───────────────────────────────────────────────────
-VERSION="$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
-  | grep '"tag_name"' \
-  | sed 's/.*"tag_name": *"\(.*\)".*/\1/')"
+ARCHIVE="${BIN}_${OS}_${ARCH}.tar.gz"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT HUP INT TERM
 
-if [ -z "$VERSION" ]; then
-  echo "Failed to fetch latest release version." >&2
+echo "Downloading ${ARCHIVE}..."
+curl -fsSL "${BASE_URL}/${ARCHIVE}" -o "${TMP}/${ARCHIVE}"
+curl -fsSL "${BASE_URL}/checksums.txt" -o "${TMP}/checksums.txt"
+
+EXPECTED="$(awk -v file="$ARCHIVE" '$2 == file { print $1; exit }' "${TMP}/checksums.txt")"
+if [ -z "$EXPECTED" ]; then
+  echo "gitso: ${ARCHIVE} is missing from checksums.txt" >&2
   exit 1
 fi
 
-ARCHIVE="${BIN}_${OS_LABEL}_${ARCH_LABEL}.tar.gz"
-URL="https://github.com/${REPO}/releases/download/${VERSION}/${ARCHIVE}"
-
-# ── download & install ───────────────────────────────────────────────────────
-TMP="$(mktemp -d)"
-trap 'rm -rf "$TMP"' EXIT
-
-echo "Downloading gitso ${VERSION} (${OS_LABEL}/${ARCH_LABEL})..."
-curl -fsSL "$URL" -o "${TMP}/${ARCHIVE}"
-tar -xzf "${TMP}/${ARCHIVE}" -C "$TMP"
-
-# ── move to PATH ─────────────────────────────────────────────────────────────
-if [ ! -w "$INSTALL_DIR" ]; then
-  echo "Installing to ${INSTALL_DIR} (requires sudo)..."
-  sudo mv "${TMP}/${BIN}" "${INSTALL_DIR}/${BIN}"
-  sudo chmod +x "${INSTALL_DIR}/${BIN}"
+if command -v sha256sum >/dev/null 2>&1; then
+  ACTUAL="$(sha256sum "${TMP}/${ARCHIVE}" | awk '{ print $1 }')"
+elif command -v shasum >/dev/null 2>&1; then
+  ACTUAL="$(shasum -a 256 "${TMP}/${ARCHIVE}" | awk '{ print $1 }')"
 else
-  mv "${TMP}/${BIN}" "${INSTALL_DIR}/${BIN}"
-  chmod +x "${INSTALL_DIR}/${BIN}"
+  echo "gitso: sha256sum or shasum is required" >&2
+  exit 1
 fi
 
-# ── remove macOS quarantine ───────────────────────────────────────────────────
-if [ "$OS_LABEL" = "macOS" ]; then
-  xattr -d com.apple.quarantine "${INSTALL_DIR}/${BIN}" 2>/dev/null || true
+if [ "$ACTUAL" != "$EXPECTED" ]; then
+  echo "gitso: checksum verification failed" >&2
+  exit 1
+fi
+echo "Checksum verified."
+
+tar -xzf "${TMP}/${ARCHIVE}" -C "$TMP"
+if [ ! -f "${TMP}/${BIN}" ]; then
+  echo "gitso: archive does not contain ${BIN}" >&2
+  exit 1
+fi
+
+if mkdir -p "$INSTALL_DIR" 2>/dev/null && [ -w "$INSTALL_DIR" ]; then
+  install -m 0755 "${TMP}/${BIN}" "${INSTALL_DIR}/${BIN}"
+else
+  echo "Installing to ${INSTALL_DIR} (sudo may ask for your password)..."
+  sudo mkdir -p "$INSTALL_DIR"
+  sudo install -m 0755 "${TMP}/${BIN}" "${INSTALL_DIR}/${BIN}"
 fi
 
 echo "Installed: ${INSTALL_DIR}/${BIN}"

@@ -49,19 +49,24 @@ Options should follow Git's documented clone syntax and appear before the reposi
 
 ## Installation
 
-### Linux / macOS
+GitHub Releases is the only distribution channel. The installer detects your OS and CPU architecture, downloads the matching prebuilt binary, and verifies its SHA-256 checksum before installing it.
+
+### macOS / Linux
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
 ```
 
-### Homebrew
+The default install location is `/usr/local/bin`. Override it when needed:
 
 ```bash
-brew tap d3Lap1ace/gitso
-brew install gitso
+curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | GITSO_INSTALL_DIR="$HOME/.local/bin" sh
 ```
 
-### Release archives
+### Windows PowerShell
 
-Download the archive for your platform from [GitHub Releases](https://github.com/d3Lap1ace/gitso/releases/latest), then place `gitso` on your `PATH`.
+```powershell
+irm https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.ps1 | iex
+```
+
+Windows installs to `%LOCALAPPDATA%\Programs\gitso` and adds it to the user `PATH`. All binaries and `checksums.txt` are published on [GitHub Releases](https://github.com/d3Lap1ace/gitso/releases/latest).
