@@ -8,6 +8,10 @@
 ~/Code/Github.com/<owner>/<repo>
 ```
 
+## 效果图
+
+![按 GitHub owner 分类存储仓库](./img/render_ch.png)
+
 ## 使用方法
 
 按照正常 Git 语法，把 `git` 换成 `gitso`：

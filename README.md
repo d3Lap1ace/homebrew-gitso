@@ -8,6 +8,10 @@ English | [中文](./README.zh-CN.md)
 ~/Code/Github.com/<owner>/<repo>
 ```
 
+## Preview
+
+![GitHub repositories organized by owner](./img/render_en.png)
+
 ## Usage
 
 Use normal Git syntax, replacing `git` with `gitso`:
