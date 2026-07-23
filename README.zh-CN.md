@@ -53,24 +53,27 @@ GITSO_DEST=~/Projects gitso clone https://github.com/owner/repo.git
 
 ## 安装
 
-GitHub Releases 是唯一的发布渠道。安装脚本会自动识别操作系统与 CPU 架构，下载对应的预编译二进制，并在安装前校验 SHA-256。
-
-### macOS / Linux
+gitso 不通过包管理器或 GitHub Releases 分发，请从源码构建：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
+git clone https://github.com/d3Lap1ace/gitso.git
+cd gitso
+go build -o gitso .
 ```
 
-默认安装到 `/usr/local/bin`。如需修改安装目录：
+将生成的二进制安装到 `PATH`：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | GITSO_INSTALL_DIR="$HOME/.local/bin" sh
+sudo install -m 0755 gitso /usr/local/bin/gitso
 ```
 
-### Windows PowerShell
+Windows PowerShell：
 
 ```powershell
-irm https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.ps1 | iex
+git clone https://github.com/d3Lap1ace/gitso.git
+Set-Location gitso
+go build -o gitso.exe .
+.\gitso.exe --version
 ```
 
-Windows 默认安装到 `%LOCALAPPDATA%\Programs\gitso`，并自动加入用户 `PATH`。所有二进制和 `checksums.txt` 都发布在 [GitHub Releases](https://github.com/d3Lap1ace/gitso/releases/latest)。
+如需全局使用，请将 `gitso.exe` 移动到已加入 `PATH` 的目录。

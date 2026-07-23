@@ -53,24 +53,27 @@ Options should follow Git's documented clone syntax and appear before the reposi
 
 ## Installation
 
-GitHub Releases is the only distribution channel. The installer detects your OS and CPU architecture, downloads the matching prebuilt binary, and verifies its SHA-256 checksum before installing it.
-
-### macOS / Linux
+gitso is not distributed through package managers or GitHub Releases. Build it from source:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
+git clone https://github.com/d3Lap1ace/gitso.git
+cd gitso
+go build -o gitso .
 ```
 
-The default install location is `/usr/local/bin`. Override it when needed:
+Install the resulting binary somewhere on your `PATH`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | GITSO_INSTALL_DIR="$HOME/.local/bin" sh
+sudo install -m 0755 gitso /usr/local/bin/gitso
 ```
 
-### Windows PowerShell
+On Windows PowerShell:
 
 ```powershell
-irm https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.ps1 | iex
+git clone https://github.com/d3Lap1ace/gitso.git
+Set-Location gitso
+go build -o gitso.exe .
+.\gitso.exe --version
 ```
 
-Windows installs to `%LOCALAPPDATA%\Programs\gitso` and adds it to the user `PATH`. All binaries and `checksums.txt` are published on [GitHub Releases](https://github.com/d3Lap1ace/gitso/releases/latest).
+Move `gitso.exe` to a directory already on your `PATH` to use it globally.
