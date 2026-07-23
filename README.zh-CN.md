@@ -2,88 +2,66 @@
 
 [English](./README.md) | 中文
 
-> `gitso` 是一个 CLI 工具，可克隆任意 GitHub 仓库（HTTPS **或** SSH），并按作者名将其存放到可预测的目录树中：  
-> `~/Code/GitHub.com/<owner>/<repo>`。  
-> 如果宿主环境没有系统级 `git`，它会自动回退到内嵌的 **go-git** 引擎，因此即使在 scratch 容器和 FaaS 中也能正常工作。
+`gitso` 是系统 Git 的透明代理。除了一种情况外，所有命令和参数都会原样传给 Git：执行没有指定目标目录的 `clone` 时，GitHub 仓库会自动存入：
 
----
-
-## 使用示例
-
-```bash
-gitso git@github.com:owner/repo.git
-gitso https://github.com/owner/repo.git
-
-# 克隆到自定义目录
-gitso -d ~/Projects git@github.com:owner/repo.git
-
-# 克隆指定分支
-gitso -b dev https://github.com/owner/repo.git
+```text
+~/Code/Github.com/<owner>/<repo>
 ```
 
-## 效果图
+## 使用方法
 
-![img.png](img/render_ch.png)
+按照正常 Git 语法，把 `git` 换成 `gitso`：
 
-## 项目动机
+```bash
+gitso clone https://github.com/owner/repo.git
+gitso clone -b dev --depth 1 git@github.com:owner/repo.git
+gitso status --short
+gitso pull --ff-only
+```
 
-| 痛点 | gitso 的解决方案 |
-|------|-----------------|
-| 仓库散落在随机文件夹 | 统一的根目录结构将所有仓库集中管理 |
-| 最小化容器 / CI 镜像缺少 `git` | 当系统缺少 `git` 时，自动切换到纯 Go 实现 |
-| 保持仓库最新 | 检测已存在仓库 -> 执行 `git pull --ff-only` |
-| 每次工作前需手动 `cd && git pull` | 一条命令，无需手动导航 |
+第一条命令等价于：
 
----
+```bash
+git clone https://github.com/owner/repo.git ~/Code/Github.com/owner/repo
+```
+
+如果明确提供了目标目录，或者仓库不在 GitHub，gitso 不会修改命令：
+
+```bash
+gitso clone https://github.com/owner/repo.git ./custom-dir
+gitso clone https://gitlab.com/owner/repo.git
+```
+
+可以通过 `GITSO_DEST` 修改仓库根目录：
+
+```bash
+GITSO_DEST=~/Projects gitso clone https://github.com/owner/repo.git
+```
+
+参数应遵循 Git 文档中的 clone 语法，放在仓库 URL 之前。
+
+## 实现原则
+
+- 依赖系统中的 `git` 命令。
+- 认证、凭据、SSH、代理、LFS、子模块及所有 Git 行为都由 Git 自己处理。
+- Unix 下 gitso 会用 Git 替换自身，完整保留终端交互、信号和退出码。
+- Windows 下会转发标准输入、输出、错误和 Git 退出码。
 
 ## 安装
 
-**Linux / macOS — 一行命令**
+### Linux / macOS
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/d3Lap1ace/gitso/master/install.sh | sh
 ```
 
-**macOS — Homebrew**
+### Homebrew
 
 ```bash
 brew tap d3Lap1ace/gitso
 brew install gitso
 ```
 
-**Linux — 手动安装**  
-从 [Releases](https://github.com/d3Lap1ace/gitso/releases/latest) 页面下载对应架构的压缩包：
+### Release 压缩包
 
-```bash
-# amd64
-tar -zxvf gitso_linux_amd64.tar.gz && sudo mv gitso /usr/local/bin/
-
-# arm64
-tar -zxvf gitso_linux_arm64.tar.gz && sudo mv gitso /usr/local/bin/
-```
-
-**Windows — amd64**  
-从 [Releases](https://github.com/d3Lap1ace/gitso/releases/latest) 页面下载 `gitso_windows_amd64.zip`，将 `gitso.exe` 解压至 `%PATH%` 中的某个目录（例如 `C:\Tools\`），然后运行 `gitso --help`。
-
-> **提示**  
-> • 检测 CPU 架构：`uname -m`（Linux/macOS）/ `wmic os get osarchitecture`（Windows）  
-> • 通过一行命令或 Homebrew 安装时，quarantine 标记会自动移除。  
-> • 在 macOS 上手动安装时，需运行：`sudo xattr -d com.apple.quarantine /usr/local/bin/gitso`
-
----
-
-## 默认目录
-
-按以下优先级依次解析：
-
-| 优先级 | 来源 |
-|--------|------|
-| 1 | `-d` / `--dest` flag |
-| 2 | `GITSO_DEST` 环境变量 |
-| 3 | `~/.gitso_config`（由 `gitso config --dest` 写入） |
-| 4 | `~/Code/Github.com`（内置默认值） |
-
-```bash
-gitso config                      # 查看当前默认目录
-gitso config --dest ~/Projects    # 永久修改默认目录
-```
+从 [GitHub Releases](https://github.com/d3Lap1ace/gitso/releases/latest) 下载对应平台的压缩包，然后把 `gitso` 放入 `PATH`。

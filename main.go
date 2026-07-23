@@ -1,28 +1,113 @@
-/*
-Copyright © 2025 d3lap1ace
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
 package main
 
-import "gitso/cmd"
+import (
+	"errors"
+	"fmt"
+	"net/url"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+)
+
+const defaultDest = "~/Code/Github.com"
 
 func main() {
-	cmd.Execute()
+	args := os.Args[1:]
+	gitPath, err := exec.LookPath("git")
+	if err != nil {
+		fail(fmt.Errorf("git executable not found: %w", err))
+	}
+	args, err = rewriteClone(args)
+	if err != nil {
+		fail(err)
+	}
+	if err := executeGit(gitPath, args); err != nil {
+		fail(err)
+	}
+}
+
+func rewriteClone(args []string) ([]string, error) {
+	if len(args) < 2 || args[0] != "clone" {
+		return args, nil
+	}
+	owner, repo, ok := githubRepo(args[len(args)-1])
+	if !ok {
+		return args, nil
+	}
+
+	base := os.Getenv("GITSO_DEST")
+	if base == "" {
+		base = defaultDest
+	}
+	base = expandHome(base)
+	dest := filepath.Join(base, owner, repo)
+	if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+		return nil, fmt.Errorf("create destination: %w", err)
+	}
+	return append(args, dest), nil
+}
+
+func githubRepo(raw string) (string, string, bool) {
+	var path string
+	if strings.HasPrefix(strings.ToLower(raw), "git@github.com:") {
+		path = raw[len("git@github.com:"):]
+	} else {
+		u, err := url.Parse(raw)
+		if err != nil || !strings.EqualFold(u.Hostname(), "github.com") || u.RawQuery != "" || u.Fragment != "" {
+			return "", "", false
+		}
+		switch u.Scheme {
+		case "http", "https", "ssh", "git":
+		default:
+			return "", "", false
+		}
+		path = u.Path
+	}
+
+	parts := strings.Split(strings.Trim(path, "/"), "/")
+	if len(parts) != 2 {
+		return "", "", false
+	}
+	owner, repo := parts[0], strings.TrimSuffix(parts[1], ".git")
+	if !validName(owner) || !validName(repo) {
+		return "", "", false
+	}
+	return owner, repo, true
+}
+
+func validName(s string) bool {
+	if s == "" || s == "." || s == ".." {
+		return false
+	}
+	for _, r := range s {
+		if r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || strings.ContainsRune("-_.", r) {
+			continue
+		}
+		return false
+	}
+	return true
+}
+
+func expandHome(path string) string {
+	if path != "~" && !strings.HasPrefix(path, "~/") {
+		return path
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return path
+	}
+	if path == "~" {
+		return home
+	}
+	return filepath.Join(home, strings.TrimPrefix(path, "~/"))
+}
+
+func fail(err error) {
+	var exitErr *exec.ExitError
+	if errors.As(err, &exitErr) {
+		os.Exit(exitErr.ExitCode())
+	}
+	fmt.Fprintln(os.Stderr, "gitso:", err)
+	os.Exit(1)
 }

@@ -63,4 +63,4 @@ if [ "$OS_LABEL" = "macOS" ]; then
   xattr -d com.apple.quarantine "${INSTALL_DIR}/${BIN}" 2>/dev/null || true
 fi
 
-echo "Installed: $(${INSTALL_DIR}/${BIN} --version 2>/dev/null || echo "${INSTALL_DIR}/${BIN}")"
+echo "Installed: ${INSTALL_DIR}/${BIN}"
